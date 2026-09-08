@@ -44,3 +44,4 @@
 @prefix void:            <http://rdfs.org/ns/void#> .
 @prefix wikidata:        <http://www.wikidata.org/entity/> .
 @prefix xsd:             <http://www.w3.org/2001/XMLSchema#> .
+@prefix mc: <http://www.minecraft.example/url/2002/> .

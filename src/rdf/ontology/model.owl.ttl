@@ -1,13 +1,357 @@
-@prefix : <https://agriculture.ld.admin.ch/eCH-1234/2/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix schema: <http://schema.org/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+@prefix mc:   <http://www.minecraft.example/url/2002/> .
 
-:Genre a owl:Class .
+# Ontology
 
-schema:genre a owl:ObjectProperty ;
-    rdfs:range :Genre .
+<http://www.minecraft.example/url/2002/> a owl:Ontology ;
+    rdfs:label "Minecraft Knowledge Graph Ontology"@de, "Minecraft Knowledge Graph Ontology"@en ;
+    dc:title "Minecraft Item & Crafting Schema"@de, "Minecraft Item & Crafting Schema"@en ;
+    dc:creator "Michael Schüpbach" ;
+    dc:date "2026-08-18" ;
+    owl:versionInfo "2.0 (RDFS Extended)" ;
+    dc:description "Formale RDFS-Ontologie zur semantischen Beschreibung von Gegenständen, Blöcken, Werkzeugen, Herstellungsstationen und Rezepten im Minecraft-Universum."@de ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> ;
+    rdfs:seeAlso <https://minecraft.wiki/> .
 
-:Genre a owl:Class ;
-    rdfs:subClassOf schema:DefinedTerm .
+mc:minedWith owl:inverseOf mc:canMine .
+
+# neu KLASSEN-HIERARCHIE (Taxonomie)
+
+mc:Item a rdfs:Class ;
+    rdfs:label "Gegenstand"@de, "Item"@en ;
+    rdfs:comment "Oberklasse für alle sammelbaren, nutzbaren oder platzierbaren Entitäten im Spiel."@de ;
+    rdfs:subClassOf rdfs:Resource ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:Recipe a rdfs:Class ;
+    rdfs:label "Rezept"@de, "Recipe"@en ;
+    rdfs:comment "Eine Herstellungsanleitung, die Zutaten und eine Station zu einem Ergebnis verknüpft."@de ;
+    rdfs:subClassOf rdfs:Resource ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:IngredientRequirement a rdfs:Class ;
+    rdfs:label "Zutatenanforderung"@de, "Ingredient Requirement"@en ;
+    rdfs:comment "Repräsentiert die Kombination aus einem benötigten Item und der Stückzahl im Rezept."@de ;
+    rdfs:subClassOf rdfs:Resource ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:Block a rdfs:Class ;
+    rdfs:label "Block"@de, "Block"@en ;
+    rdfs:comment "Ein Gegenstand, der als 3D-Block in der Spielwelt platziert oder abgebaut werden kann."@de ;
+    rdfs:subClassOf mc:Item ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:Tool a rdfs:Class ;
+    rdfs:label "Werkzeug"@de, "Tool"@en ;
+    rdfs:comment "Ein Ausrüstungsgegenstand zur Umweltinteraktion (z. B. Spitzhacke, Axt)."@de ;
+    rdfs:subClassOf mc:Item ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:Material a rdfs:Class ;
+    rdfs:label "Material"@de, "Material"@en ;
+    rdfs:comment "Grundlegende Rohstoffe oder Zwischenprodukte (z. B. Stock, Diamant, Eisenbarren)."@de ;
+    rdfs:subClassOf mc:Item ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:CraftingStation a rdfs:Class ;
+    rdfs:label "Herstellungsstation"@de, "Crafting Station"@en ;
+    rdfs:comment "Ein Block oder Ort, an dem Rezepte ausgeführt werden können (z. B. Werkbank, Ofen)."@de ;
+    rdfs:subClassOf mc:Block ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:Workstation a owl:Class ;
+    rdfs:label "Arbeitsstation"@de, "Workstation"@en ;
+    rdfs:comment "Synonyme Klasse zu CraftingStation zur Angleichung externer Vokabulare."@de ;
+    owl:equivalentClass mc:CraftingStation ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:SmeltingRecipe a owl:Class ;
+    rdfs:label "Schmelzrezept"@de, "Smelting Recipe"@en ;
+    rdfs:comment "Klasse aller Herstellungsrezepte, die zwingend in einem Schmelzofen ausgeführt werden müssen."@de ;
+    owl:equivalentClass [
+        a owl:Restriction ;
+        owl:onProperty mc:craftedAt ;
+        owl:hasValue mc:Furnace
+    ] ;
+    rdfs:subClassOf mc:Recipe ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+
+# EIGENSCHAFTEN-TERMINOLOGIE (T-Box / Properties)
+# 1. Namen & Beschreibungen (Datentyp-Eigenschaften -> Range: Literal)
+
+mc:hasName a rdf:Property ;
+    rdfs:label "hat Name"@de, "has name"@en ;
+    rdfs:comment "Der menschenlesbare Anzeigename eines Gegenstands oder einer Entität im Spiel."@de ;
+    rdfs:domain mc:Item ;
+    rdfs:range rdfs:Literal ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+# 2. Rezept-Verknüpfungen (Objekt- & Datentyp-Eigenschaften)
+
+mc:hasRecipe a owl:ObjectProperty ;
+    rdfs:label "hat Rezept"@de, "has recipe"@en ;
+    rdfs:comment "Verknüpft ein herstellbares Item mit dessen zugehörigem Rezept."@de ;
+    rdfs:domain mc:Item ;
+    rdfs:range mc:Recipe ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+
+mc:craftedAt a owl:ObjectProperty, owl:FunctionalProperty ;
+    rdfs:label "hergestellt an"@de, "crafted at"@en ;
+    rdfs:domain mc:Recipe ;
+    rdfs:range mc:CraftingStation ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:requiresIngredient a owl:ObjectProperty ;
+    rdfs:label "benötigt Zutat"@de, "requires ingredient"@en ;
+    rdfs:comment "Verknüpft ein Rezept mit einem Zutaten-Anforderungsknoten."@de ;
+    rdfs:domain mc:Recipe ;
+    rdfs:range mc:IngredientRequirement ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:yields a rdf:Property ;
+    rdfs:label "ergibt Ausbeute"@de, "yields count"@en ;
+    rdfs:comment "Die Stückzahl des Ziel-Items, die bei erfolgreicher Herstellung entsteht."@de ;
+    rdfs:domain mc:Recipe ;
+    rdfs:range rdfs:Literal ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+
+# 3. Zutaten-Struktur (Eigenschaften für die Blank Nodes)
+
+mc:requiredItem a owl:ObjectProperty ;
+    rdfs:label "benötigter Gegenstand"@de, "required item"@en ;
+    rdfs:comment "Verweist von einer Zutatenanforderung auf das konkrete benötigte Item."@de ;
+    rdfs:domain mc:IngredientRequirement ;
+    rdfs:range mc:Item ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:amount a rdf:Property ;
+    rdfs:label "Menge"@de, "amount"@en ;
+    rdfs:comment "Die genaue Anzahl der Einheiten dieses Gegenstands für das Rezept."@de ;
+    rdfs:domain mc:IngredientRequirement ;
+    rdfs:range rdfs:Literal ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+# 4. Spielmechanik & Interaktion (inkl. Property-Hierarchie)
+
+mc:requiresInteractionTool a rdf:Property ;
+    rdfs:label "benötigt Interaktionswerkzeug"@de, "requires tool"@en ;
+    rdfs:comment "Allgemeine Eigenschaft: Gibt an, dass für die Nutzung ein Werkzeug erforderlich ist."@de ;
+    rdfs:domain mc:Item ;
+    rdfs:range mc:Tool ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+
+mc:minedWith a rdf:Property ;
+    rdfs:subPropertyOf mc:requiresInteractionTool ;
+    rdfs:label "abgebaut mit"@de, "mined with"@en ;
+    rdfs:comment "Bestimmt das Werkzeug, mit dem ein Block in der Welt abgebaut werden kann."@de ;
+    rdfs:domain mc:Block ;
+    rdfs:range mc:Tool ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:isAdjacentTo a owl:ObjectProperty, owl:SymmetricProperty ;
+    rdfs:label "grenzt an"@de, "is adjacent to"@en ;
+    rdfs:comment "Gibt eine symmetrische Nachbarschaftsbeziehung zwischen platzierten Blöcken an."@de ;
+    rdfs:domain mc:Block ;
+    rdfs:range mc:Block ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:unlocksTierOf a owl:ObjectProperty, owl:TransitiveProperty ;
+    rdfs:label "schaltet Stufe frei"@de, "unlocks tier of"@en ;
+    rdfs:comment "Gibt eine transitive Progressionsstufe zwischen Werkzeugen an."@de ;
+    rdfs:domain mc:Tool ;
+    rdfs:range mc:Tool ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:harvestedWith a owl:ObjectProperty ;
+    rdfs:label "geerntet mit"@de, "harvested with"@en ;
+    rdfs:comment "Äquivalente Eigenschaft zu minedWith zur Harmonisierung alternativer Vokabulare."@de ;
+    owl:equivalentProperty mc:minedWith ;
+    rdfs:domain mc:Block ;
+    rdfs:range mc:Tool ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:hasItemCode a owl:ObjectProperty, owl:InverseFunctionalProperty ;
+    rdfs:label "hat Item-Code"@de, "has item code"@en ;
+    rdfs:comment "Eindeutiger Primärschlüssel für Gegenstände (invers-funktional: maximal 1 Gegenstand pro Code)."@de ;
+    rdfs:domain mc:Item ;
+    rdfs:range rdfs:Resource ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+mc:requiresMaterial a owl:ObjectProperty ;
+    rdfs:label "benötigt Material"@de, "requires material"@en ;
+    rdfs:comment "Verbindet ein herstellbares Item direkt mit seinen benötigten Ausgangsmaterialien (verkürzt den Pfad über Rezept und Zutatenanforderung)."@de ;
+    owl:propertyChainAxiom ( mc:hasRecipe mc:requiresIngredient mc:requiredItem ) ;
+    rdfs:domain mc:Item ;
+    rdfs:range mc:Item ;
+    rdfs:isDefinedBy <http://www.minecraft.example/url/2002/> .
+
+
+# Data: hier kommen die ganzen Tripples für die Items
+
+mc:OakLog a mc:Block ;
+    mc:hasName "Eichenstamm"@de, "Oak Log"@en .
+
+mc:Cobblestone a mc:Block ;
+    mc:hasName "Bruchstein"@de, "Cobblestone"@en ;
+    mc:minedWith mc:WoodenPickaxe .
+
+mc:IronOre a mc:Block ;
+    mc:hasName "Eisenerz"@de, "Iron Ore"@en ;
+    mc:minedWith mc:StonePickaxe .
+
+mc:Diamond a mc:Material ;
+    mc:hasName "Diamant"@de, "Diamond"@en ;
+    mc:minedWith mc:IronPickaxe .
+
+mc:Stick a mc:Material ;
+    mc:hasName "Stock"@de, "Stick"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 4 ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:OakPlanks ;
+            mc:amount 2
+        ]
+    ] .
+
+mc:Craftingtable a mc:CraftingStation ;
+    mc:hasName "Werkbank"@de, "Crafting Table"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 1 ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:OakPlanks ;
+            mc:amount 4
+        ]
+    ] .
+
+mc:OakPlanks a mc:Block ;
+    mc:hasName "Eichenholzbretter"@de, "Oak Planks"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 4 ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:OakLog ;
+            mc:amount 1
+        ]
+    ] .
+
+mc:WoodenPickaxe a mc:Tool ;
+    mc:hasName "Holzspitzhacke"@de, "Wooden Pickaxe"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 1 ;
+        mc:craftedAt mc:Craftingtable ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:OakPlanks ;
+            mc:amount 3
+        ], [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:Stick ;
+            mc:amount 2
+        ]
+    ] .
+
+mc:StonePickaxe a mc:Tool ;
+    mc:hasName "Steinspitzhacke"@de, "Stone Pickaxe"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 1 ;
+        mc:craftedAt mc:Craftingtable ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:Cobblestone ;
+            mc:amount 3
+        ], [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:Stick ;
+            mc:amount 2
+        ]
+    ] .
+
+mc:Furnace a mc:CraftingStation ;
+    mc:hasName "Ofen"@de, "Furnace"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 1 ;
+        mc:craftedAt mc:Craftingtable ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:Cobblestone ;
+            mc:amount 8
+        ]
+    ] .
+
+mc:IronIngot a mc:Material ;
+    mc:hasName "Eisenbarren"@de, "Iron Ingot"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 1 ;
+        mc:craftedAt mc:Furnace ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:IronOre ;
+            mc:amount 1
+        ]
+    ] .
+
+mc:IronPickaxe a mc:Tool ;
+    mc:hasName "Eisenspitzhacke"@de, "Iron Pickaxe"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 1 ;
+        mc:craftedAt mc:Craftingtable ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:IronIngot ;
+            mc:amount 3
+        ], [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:Stick ;
+            mc:amount 2
+        ]
+    ] .
+
+mc:DiamondPickaxe a mc:Tool ;
+    mc:hasName "Diamantspitzhacke"@de, "Diamond Pickaxe"@en ;
+    mc:hasRecipe [
+        a mc:Recipe ;
+        mc:yields 1 ;
+        mc:craftedAt mc:Craftingtable ;
+        mc:requiresIngredient [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:Diamond ;
+            mc:amount 3
+        ], [
+            a mc:IngredientRequirement ;
+            mc:requiredItem mc:Stick ;
+            mc:amount 2
+        ]
+    ] .
+
+mc:Furnace mc:isAdjacentTo mc:Craftingtable .
+
+# Werkzeug-Progression (Transitive Kette)
+mc:WoodenPickaxe mc:unlocksTierOf mc:StonePickaxe .
+mc:StonePickaxe mc:unlocksTierOf mc:IronPickaxe .
+mc:IronPickaxe mc:unlocksTierOf mc:DiamondPickaxe .
+
+# sameAs
+mc:WorkBench owl:sameAs mc:Craftingtable .
+
+# Haltbarkeitswerte für Werkzeuge
+mc:WoodenPickaxe mc:durability 59 .
+mc:StonePickaxe  mc:durability 131 .
+mc:IronPickaxe   mc:durability 250 .
+mc:DiamondPickaxe mc:durability 1561 .

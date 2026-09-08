@@ -181,7 +181,7 @@ generate-glossary-docs: src/rdf/data/glossary.skos.ttl $(PREFIXES) src/python/ut
 	$(VENV_PYTHON) src/python/utils/generate_glossary_docs.py -i src/rdf/data/glossary.skos.ttl -d $(DOCS_DIR) -p $(PREFIXES) || { printf "$(NC)"; exit 1; }; \
 	printf "$(NC)"
 
-docs: $(SHACL_REPORT) generate-shacl-docs generate-glossary-docs
+docs: $(SHACL_REPORT) generate-shacl-docs
 	@printf "$(BOLD)[*] Rendering documentation with Quarto...$(NC)\n"
 	@printf "$(GREY)"; \
 	quarto render docs > $(QUARTO_LOG) 2>&1 || { printf "$(NC)\n$(RED)ERROR: Quarto rendering failed. See log below:$(NC)\n$(GREY)"; cat $(QUARTO_LOG); printf "$(NC)\n"; exit 1; }; \
