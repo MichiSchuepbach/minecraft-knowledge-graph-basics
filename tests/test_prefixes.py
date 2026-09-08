@@ -8,14 +8,14 @@ def get_tracked_files():
     """Returns a list of tracked files that might contain prefix definitions."""
     try:
         result = subprocess.run(["git", "ls-files", "-z"], capture_output=True, text=True, check=True)
-        files = [f for f in result.stdout.split('\0') if f and f.endswith(('.ttl', '.rq', '.py', '.md', '.qmd'))]
+        files = [f for f in result.stdout.split('\0') if f and f.endswith(('.ttl', '.rq', '.py', '.md', '.qmd')) and not f.startswith('tests/')]
         return [Path(f) for f in files]
         
     except (subprocess.SubprocessError, FileNotFoundError):
         files = []
         for ext in ("*.ttl", "*.rq", "*.py", "*.md", "*.qmd"):
             files.extend(
-                p for p in Path(".").rglob(ext)
+                p for p in Path("src").rglob(ext)
                 if not set(p.parts) & {"venv", "build", ".quarto", ".git"}
             )
         return files
