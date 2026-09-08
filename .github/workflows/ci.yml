@@ -7,13 +7,12 @@ on:
   pull_request:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build-test-publish-deploy:
     runs-on: ubuntu-latest
     
-    # force terminal tools to output colors in GitHub Actions
     env:
       FORCE_COLOR: "1"
     
@@ -33,14 +32,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
-
-      - name: Install system fonts for Typst
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y fonts-urw-base35
-
       - name: Set up dependencies
         run: make setup
 
@@ -49,15 +40,3 @@ jobs:
 
       - name: Run tests
         run: make test
-
-      - name: Build documentation page
-        if: github.ref == 'refs/heads/main'
-        run: make docs
-
-      - name: Deploy documentation page
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/docs/
-          publish_branch: gh-pages
