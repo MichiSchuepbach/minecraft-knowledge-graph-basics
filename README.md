@@ -1,4 +1,4 @@
-# Semantic web project template
+# Minecraft Knowledge Graph – Semantic Web Project
 
 [![CI](https://github.com/blw-ofag-ufag/semantic-web-template/actions/workflows/ci.yml/badge.svg)](https://github.com/blw-ofag-ufag/semantic-web-template/actions/workflows/ci.yml)
 [![GitHub last commit](https://img.shields.io/github/last-commit/blw-ofag-ufag/semantic-web-template.svg)](https://github.com/blw-ofag-ufag/semantic-web-template/commits)
@@ -12,10 +12,10 @@ For demonstrative purposes, this template repository includes a full semantic we
 4. SPARQL-based processing of the graph (using rules in `src/sparql/processing/...`)
 5. SHACL-based graph data validation (using `src/rdf/shapes/model.shacl.ttl`)
 6. a even more customizable Pytest test suite,
-7. uploading of the final graph to LINDAS
-8. a documentation building pipeline using Quarto
+7. local validation and test suites without external deployment
+8. interactive educational notebooks (`notebooks/`) explaining Semantic Web theory (RDF, SPARQL, RDFS/OWL reasoning, SHACL) using the Minecraft knowledge graph.
 
-Specifically, this demo project creates a graph of around 120k triples from the Chinook database, makes some inferences, processes and validates the graph.
+Specifically, this project models a Minecraft knowledge graph (items, blocks, recipes), makes OWL/HermiT inferences, and validates the data against SHACL shapes.
 
 > [!IMPORTANT]
 > After using this template repository for a project, you probably want to delete/overwrite any of the aforementioned turtle/sparql/python files.
@@ -68,27 +68,9 @@ To streamline the workflow, this project uses `make` as its primary orchestratio
 
     Make sure you pass all tests with `pytest`.
 
-4. Upload the final data to [LINDAS](https://lindas.admin.ch/), the linked data service by the federal archives:
+4. Deployment note:
 
-    **Automatic Deployment**
-
-    The deployment is automatically triggered via GitHub Actions whenever changes are pushed or merged to the `main` branch. 
-    To enable this, configure the environment variables listed in step 1 as **repository secrets** in your GitHub project settings (`Settings > Secrets and variables > Actions > New repository secret`):
-
-    **Manual Deployment**
-
-    You can still upload the final data manually by running:
-
-    ``` sh
-    make publish
-    ```
-
-    By default, the publication process starts by deleting any pre-existing data in the provided named graph on LINDAS.
-    You can also *just* delete any published data by running:
-
-    ``` sh
-    make delete
-    ```
+    This didactic Minecraft project is intended for local testing and CI validation. Publishing to LINDAS is disabled.
 
 5. *If* you want to clean all written files:
 
