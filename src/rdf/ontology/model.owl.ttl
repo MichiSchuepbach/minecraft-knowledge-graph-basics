@@ -350,7 +350,6 @@ mc:IronPickaxe mc:unlocksTierOf mc:DiamondPickaxe .
 # sameAs
 mc:WorkBench owl:sameAs mc:Craftingtable .
 
-# Haltbarkeitswerte für Werkzeuge
 mc:WoodenPickaxe mc:durability 59 .
 mc:StonePickaxe  mc:durability 131 .
 mc:IronPickaxe   mc:durability 250 .
