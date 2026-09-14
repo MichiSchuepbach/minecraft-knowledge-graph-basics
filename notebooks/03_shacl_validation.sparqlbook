@@ -2,7 +2,7 @@
   {
     "kind": 1,
     "language": "markdown",
-    "value": "# Kapitel 1: Von der Wissensableitung mit OWL zur Datenprüfung mit SHACL\n\n### Rückblick: OWL\nDas letzte Mal haben wir uns OWL und das Reasoning angeschaut. Dies haben wir gebraucht, um neues Wissen nicht mühsam von Hand erfassen zu müssen, sondern logisch aus bestehenden Zusammenhängen abzuleiten:\n* **Wissen selbstständig ergänzen:** Wir erfassen in den Rohdaten nur Basisfakten, logische Umkehrungen oder Vererbungen leitet das System automatisch ab.\n* **Der konkrete Nutzen:** Das spart manuelle Datenpflege und verhindert doppelte Einträge in unserem Wissensgraphen.\n\n---\n\n### Das erste Konzept: Open World Assumption (Offene Welt)\nOWL basiert auf dem Prinzip der offenen Welt:\n* **Das Prinzip:** Was nicht explizit im Graphen steht, ist nicht falsch oder verboten, sondern gilt lediglich als unbekannt.\n* **Minecraft-Beispiel:** Fehlt beim Eichenstamm (`mc:OakLog`) der Name (`mc:hasName`), bricht das System nicht ab. OWL nimmt einfach an: Der Name existiert irgendwo da draußen in der Welt, er steht im Moment nur noch nicht in unserem Wissensgraphen.\n* **Der Nachteil:** Man kann so nicht prüfen, ob Daten vollständig sind, weil ein fehlender Wert niemals als Fehler erkannt wird.\n\n---\n\n### Das zweite Konzept: Non-Unique Name Assumption (Uneindeutige Namen)\nIn OWL bedeuten unterschiedliche Bezeichner nicht automatisch unterschiedliche Dinge:\n* **Das Prinzip:** Das System nimmt an, dass zwei verschiedene Namen dasselbe reale Objekt meinen können.\n* **Minecraft-Beispiel:** Ein Rezept darf eigentlich nur an genau einer Station ausgeführt werden. Trägt man versehentlich zwei Stationen ein (wie Ofen und Schmelzofen), bricht OWL nicht ab[cite: 1, 3]. Es schlussfolgert stattdessen: Beide Stationen müssen derselbe Ofen mit zwei verschiedenen Namen sein (`owl:sameAs`).\n* **Der Nachteil:** Echte Erfassungsfehler fliegen nicht auf, sondern werden stillschweigend weg-interpretiert.\n\n---\n\n### Warum wir SHACL brauchen: Das Prinzip der Closed World\nBei SHACL gehen wir für die Prüfung von einer geschlossenen Welt (Closed World) aus:\n* **Prüfung des aktuellen Bestands:** Alles, was sich im Moment in unserem Wissensgraphen befindet, wird direkt gegen unsere aufgestellten Regeln (die Shapes) geprüft.\n* **Verstöße als Fehler ausgeben:** Was nicht im Graphen vorhanden ist oder einer Regel widerspricht, gilt nicht mehr als unbekannt, sondern wird unmittelbar als Fehler im Prüfbericht ausgewiesen[cite: 1, 7].\n* **Validierung und Vollständigkeit:** Genau das brauchen wir, um Wissensgraphen verlässlich zu validieren und auf ihre Vollständigkeit zu prüfen.\n* **Keine Veränderung der Daten:** SHACL dichtet den Daten nichts hinzu, sondern lässt den Wissensgraphen unverändert und liefert einen sauberen Prüfbericht (Validation Report).",
+    "value": "# Kapitel 1: Von der Wissensableitung mit OWL zur Datenprüfung mit SHACL\n\n### Rückblick: OWL\nDas letzte Mal haben wir uns OWL und das Reasoning angeschaut. Dies haben wir gebraucht, um neues Wissen nicht mühsam von Hand erfassen zu müssen, sondern logisch aus bestehenden Zusammenhängen abzuleiten:\n* **Wissen selbstständig ergänzen:** Wir erfassen in den Rohdaten nur Basisfakten, logische Umkehrungen oder Vererbungen leitet das System automatisch ab.\n* **Der konkrete Nutzen:** Das spart manuelle Datenpflege und verhindert doppelte Einträge in unserem Wissensgraphen.\n\n---\n\n### Das erste Konzept: Open World Assumption (Offene Welt)\nOWL basiert auf dem Prinzip der offenen Welt:\n* **Das Prinzip:** Was nicht explizit im Graphen steht, ist nicht falsch oder verboten, sondern gilt lediglich als unbekannt.\n* **Minecraft-Beispiel:** Fehlt beim Eichenstamm (`mc:OakLog`) der Name (`mc:hasName`), bricht das System nicht ab. OWL nimmt einfach an: Der Name existiert irgendwo da draußen in der Welt, er steht im Moment nur noch nicht in unserem Wissensgraphen.\n* **Der Nachteil:** Man kann so nicht prüfen, ob Daten vollständig sind, weil ein fehlender Wert niemals als Fehler erkannt wird.\n\n---\n\n### Das zweite Konzept: Non-Unique Name Assumption (Uneindeutige Namen)\nIn OWL bedeuten unterschiedliche Bezeichner nicht automatisch unterschiedliche Dinge:\n* **Das Prinzip:** Das System nimmt an, dass zwei verschiedene Namen dasselbe reale Objekt meinen können.\n* **Minecraft-Beispiel:** Ein Rezept darf eigentlich nur an genau einer Station ausgeführt werden. Trägt man versehentlich zwei Stationen ein (wie Ofen und Schmelzofen), bricht OWL nicht ab. Es schlussfolgert stattdessen: Beide Stationen müssen derselbe Ofen mit zwei verschiedenen Namen sein (`owl:sameAs`).\n* **Der Nachteil:** Echte Erfassungsfehler fliegen nicht auf, sondern werden stillschweigend weg-interpretiert.\n\n---\n\n### Warum wir SHACL brauchen: Das Prinzip der Closed World\nBei SHACL gehen wir für die Prüfung von einer geschlossenen Welt (Closed World) aus:\n* **Prüfung des aktuellen Bestands:** Alles, was sich im Moment in unserem Wissensgraphen befindet, wird direkt gegen unsere aufgestellten Regeln (die Shapes) geprüft.\n* **Verstöße als Fehler ausgeben:** Was nicht im Graphen vorhanden ist oder einer Regel widerspricht, gilt nicht mehr als unbekannt, sondern wird unmittelbar als Fehler im Prüfbericht ausgewiesen.\n* **Validierung und Vollständigkeit:** Genau das brauchen wir, um Wissensgraphen verlässlich zu validieren und auf ihre Vollständigkeit zu prüfen.\n* **Keine Veränderung der Daten:** SHACL dichtet den Daten nichts hinzu, sondern lässt den Wissensgraphen unverändert und liefert einen sauberen Prüfbericht (Validation Report).",
     "metadata": {}
   },
   {
@@ -74,7 +74,7 @@
   {
     "kind": 1,
     "language": "markdown",
-    "value": "#### Schritt 2: Die Shape-Definition (minecraft_shapes.ttl)\nWir nutzen Regex für eine neue Namenskonvetion.\n\n```turtle\n# 1. Namenskonvention per Regex \nmc:ToolShape a sh:NodeShape ;\n    sh:targetClass mc:Tool ;\n    sh:nodeKind sh:IRI ;\n    sh:property [\n        sh:path mc:hasName ;\n        sh:name \"Werkzeug-Namensformat\"@de ;\n        sh:description \"Der Name eines Werkzeugs muss dem typischen Spitzhacken-Schema folgen.\"@de ;\n        sh:pattern \"(Pickaxe|spitzhacke)$\" ;\n        sh:message \"Ein Werkzeugname muss auf 'Pickaxe' oder 'spitzhacke' enden.\"@de ;\n    ] .",
+    "value": "\n```turtle\nmc:ToolShape a sh:NodeShape ;\n    sh:targetClass mc:Tool ;\n    sh:nodeKind sh:IRI ;\n    sh:property [\n        sh:path mc:hasName ;\n        sh:name \"Werkzeug-Namensformat\"@de ;\n        sh:description \"Der Name eines Werkzeugs muss dem typischen Spitzhacken-Schema folgen.\"@de ;\n        sh:pattern \"(Pickaxe|spitzhacke)$\" ;\n        sh:message \"Ein Werkzeugname muss auf 'Pickaxe' oder 'spitzhacke' enden.\"@de ;\n    ] .",
     "metadata": {}
   },
   {
@@ -110,13 +110,43 @@
   {
     "kind": 1,
     "language": "markdown",
-    "value": "---\n\n#### Schritt 2: Die Shape-Definition (minecraft_shapes.ttl)\nIn SHACL verknüpfen mehrere Eigenschaften standardmäßig mit logischem UND. Mit `sh:or` brechen wir das auf: Mindestens eine der beiden definierten Unter-Shapes muss erfüllt sein:\n\n```turtle\nmc:ToolDurabilityShape a sh:NodeShape ;\n    sh:targetClass mc:Tool ;\n    sh:or (\n        [\n            sh:property [\n                sh:path mc:durability ;\n                sh:name \"Haltbarkeit\"@de ;\n                sh:minCount 1 ;\n                sh:datatype xsd:integer ;\n                sh:minInclusive 1 ;\n                sh:message \"Die Haltbarkeit muss mindestens 1 betragen.\"@de ;\n            ] ;\n        ]\n        [\n            sh:property [\n                sh:path mc:isUnbreakable ;\n                sh:name \"Unzerstoerbar-Status\"@de ;\n                sh:hasValue true ;\n                sh:message \"Fuer unzerstoerbare Items muss der Wert 'true' gesetzt sein.\"@de ;\n            ] ;\n        ]\n    ) .",
+    "value": "---\n\n#### Schritt 2: Die Shape-Definition (minecraft_shapes.ttl)\nIn SHACL verknüpfen mehrere Eigenschaften standardmäßig mit logischem UND. Mit `sh:or` brechen wir das auf: Mindestens eine der beiden definierten Unter-Shapes muss erfüllt sein:\n\n```turtle\nmc:ToolDurabilityShape a sh:NodeShape ;\n    sh:targetClass mc:Tool ;\n    sh:or (\n        [\n            sh:property [\n                sh:path mc:durability ;\n                sh:name \"Haltbarkeit\"@de ;\n                sh:minCount 1 ;\n                sh:datatype xsd:integer ;\n                sh:minInclusive 1 ;\n                sh:message \"Die Haltbarkeit muss mindestens 1 betragen.\"@de ;\n            ] ;\n        ]\n        [\n            sh:property [\n                sh:path mc:isUnbreakable ;\n                sh:name \"Unzerstoerbar-Status\"@de ;\n                sh:hasValue true ;\n                sh:message \"Für unzerstoerbare Items muss der Wert 'true' gesetzt sein.\"@de ;\n            ] ;\n        ]\n    ) .",
     "metadata": {}
   },
   {
     "kind": 1,
     "language": "markdown",
-    "value": "# Kapitel 3: Das Zwei-Graphen-Modell und Validierungsworkflow\n\n---\n\n### 1. Das Zwei-Graphen-Modell (Idempotenz)\nEine SHACL-Validierung trennt die eigentlichen Fachdaten strikt von den definierten Prüfregeln:\n\n* **Data Graph (DG):** Der RDF-Graph, der die tatsächlichen Fakten und Instanzen unseres Minecraft-Wissensgraphen enthält (z. B. `mc:Stick`, `mc:Cobblestone`).\n* **Shapes Graph (SG):** Der RDF-Graph, der ausschließlich die Validierungsregeln enthält (unsere Datei `minecraft_shapes.ttl`).\n\n\n---\n\n### 2. Regeln als Übersicht: Diagramme mit SHACL Play!\nSHACL prüft nicht nur Fehler, sondern zeigt uns auch auf einen Blick, wie unsere Daten aufgebaut sind.\n\nDas Web-Tool SHACL Play! liest unsere Shapes-Datei ein und zeichnet daraus automatisch ein übersichtliches Diagramm:\n\nDas Web-Tool SHACL Play! liest unsere Shapes-Datei ein und zeichnet daraus automatisch ein übersichtliches Diagramm:UML-Klassendiagramm.\n\n* Jede Shape wird zu einem Kasten für eine Klasse, zum Beispiel für Blöcke oder Rezepte.gerendert.\n* Eigenschaften wie Name oder Ausbeute stehen als Text- und Zahlenangaben direkt im Kasten\n* Verknüpfungen zu anderen Objekten werden als Pfeile zwischen den Kästen gezeichnet.\n\n\n",
+    "value": "# Kapitel 3: Das Zwei-Graphen-Modell und Validierungsworkflow\n\n---\n\n### 1. Das Zwei-Graphen-Modell (Idempotenz)\nEine SHACL-Validierung trennt die eigentlichen Fachdaten strikt von den definierten Prüfregeln:\n\n* **Data Graph (DG):** Der RDF-Graph, der die tatsächlichen Fakten und Instanzen unseres Minecraft-Wissensgraphen enthält (z. B. `mc:Stick`, `mc:Cobblestone`).\n* **Shapes Graph (SG):** Der RDF-Graph, der ausschließlich die Validierungsregeln enthält (unsere Datei `minecraft_shapes.ttl`).\n\n\n---\n\n### 2. Regeln als Übersicht: Diagramme mit SHACL Play!\nSHACL prüft nicht nur Fehler, sondern zeigt uns auch auf einen Blick, wie unsere Daten aufgebaut sind.\n\nDas Web-Tool SHACL Play! liest unsere Shapes-Datei ein und zeichnet daraus automatisch ein übersichtliches Diagramm: UML-Klassendiagramm.\n\n* Jede Shape wird zu einem Kasten für eine Klasse, zum Beispiel für Blöcke oder Rezepte.gerendert.\n* Eigenschaften wie Name oder Ausbeute stehen als Text- und Zahlenangaben direkt im Kasten\n* Verknüpfungen zu anderen Objekten werden als Pfeile zwischen den Kästen gezeichnet.\n\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "",
     "metadata": {}
   },
   {

@@ -6,43 +6,43 @@
 @prefix mc:    <http://www.minecraft.example/url/2002/> .
 
 # ==============================================================================
-# 1. BASISSCHABLONE FÜR GEGENSTÄNDE (mc:Item)
-# Offene Shape: Vererbt Eigenschaften an alle Unterklassen (Blöcke, Werkzeuge)
+# 1. BASISSCHABLONE FÜR ALLE ITEMS (mc:Item)
 # ==============================================================================
 mc:ItemShape a sh:NodeShape ;
     rdfs:label "Item-Basisschablone"@de ;
-    rdfs:comment "Grundlegende Integritätsregeln für alle existierenden Gegenstände in Minecraft."@de ;
+    rdfs:comment "Zentrale Validierung für alle Items sowie Subklassen (Werkzeuge, Blöcke)."@de ;
     sh:targetClass mc:Item ;
     sh:property [
         sh:path mc:hasName ;
         sh:name "Gegenstandsname"@de ;
-        sh:description "Jeder Gegenstand muss mindestens einen Namen als Sprach-Literal besitzen. Jede Sprache darf maximal einmal vorkommen."@de ;
+        sh:description "Jeder Gegenstand muss mindestens einen Namen mit eindeutigem Sprach-Tag besitzen."@de ;
         sh:minCount 1 ;
         sh:datatype rdf:langString ;
         sh:uniqueLang true ;
-        sh:message "Ein Gegenstand muss mindestens einen Namen mit Sprach-Tag (z. B. @de) besitzen; Sprach-Tags dürfen nicht doppelt vergeben werden."@de ;
+        sh:message "Ein Gegenstand muss mindestens einen Namen mit Sprach-Tag besitzen; Sprach-Tags dürfen nicht doppelt vergeben werden."@de ;
     ] ;
     sh:property [
         sh:path mc:hasRecipe ;
         sh:name "Herstellungsrezept"@de ;
-        sh:description "Optionaler Verweis auf das Herstellungsrezept, durch welches dieser Gegenstand erzeugt wird."@de ;
+        sh:description "Optionaler Verweis auf das Herstellungsrezept dieses Gegenstands."@de ;
         sh:class mc:Recipe ;
         sh:nodeKind sh:BlankNodeOrIRI ;
-        sh:message "Das referenzierte Herstellungsrezept muss eine gültige Instanz von mc:Recipe sein."@de ;
+        sh:message "Das referenzierte Rezept muss eine gültige Instanz von mc:Recipe sein."@de ;
     ] .
 
 # ==============================================================================
-# 2. GESCHLOSSENE SHAPE FÜR WERKZEUGE (mc:Tool)
+# 2. WERKZEUGE (mc:Tool) - Spezialisierung: Regex-Name & Haltbarkeits-Logik
 # ==============================================================================
 mc:ToolShape a sh:NodeShape ;
     rdfs:label "Werkzeug-Schablone"@de ;
-    rdfs:comment "Regeln für Werkzeuge: Namenskonvention, Haltbarkeit und abgeleitete Fähigkeiten."@de ;
+    rdfs:comment "Regeln für Werkzeuge: Namensmuster und logisches Entweder-Oder für Haltbarkeit."@de ;
     sh:targetClass mc:Tool ;
     sh:closed true ;
     sh:ignoredProperties ( 
         rdf:type 
+        rdfs:subClassOf 
         owl:sameAs 
-        mc:canMine 
+        mc:hasRecipe            
         mc:unlocksTierOf 
         mc:requiresMaterial 
         mc:harvestedWith 
@@ -51,70 +51,63 @@ mc:ToolShape a sh:NodeShape ;
     sh:property [
         sh:path mc:hasName ;
         sh:name "Werkzeug-Namensformat"@de ;
+        sh:description "Werkzeugbezeichnungen müssen auf 'Pickaxe' oder 'spitzhacke' enden."@de ;
         sh:pattern "(Pickaxe|spitzhacke)$" ;
-        sh:message "Ein Werkzeugname muss auf 'Pickaxe' oder 'spitzhacke' enden."@de ;
+        sh:message "Der Werkzeugname muss dem Nomenklatur-Schema folgen und auf 'Pickaxe' oder 'spitzhacke' enden."@de ;
     ] ;
-    sh:property [
-        sh:path mc:hasRecipe ;
-        sh:name "Werkzeug-Rezept"@de ;
-        sh:class mc:Recipe ;
-    ] ;
-    sh:property [
-        sh:path mc:durability ;
-        sh:name "Werkzeug-Haltbarkeit"@de ;
-        sh:datatype xsd:integer ;
-        sh:minInclusive 1 ;
-        sh:message "Die Haltbarkeit muss als positive Ganzzahl von mindestens 1 deklariert sein."@de ;
-    ] ;
-    sh:property [
-        sh:path mc:isUnbreakable ;
-        sh:name "Unzerstörbar-Status"@de ;
-        sh:datatype xsd:boolean ;
-        sh:message "Das Prädikat mc:isUnbreakable muss ein boolescher Wert (true/false) sein."@de ;
-    ] .
+    sh:or (
+        [
+            sh:property [
+                sh:path mc:durability ;
+                sh:name "Werkzeug-Haltbarkeit"@de ;
+                sh:minCount 1 ;
+                sh:datatype xsd:integer ;
+                sh:minInclusive 1 ;
+                sh:message "Die Haltbarkeit muss eine positive Ganzzahl von mindestens 1 sein."@de ;
+            ] ;
+        ]
+        [
+            sh:property [
+                sh:path mc:isUnbreakable ;
+                sh:name "Unzerstörbar-Status"@de ;
+                sh:hasValue true ;
+                sh:message "Für unzerstörbare Items muss mc:isUnbreakable den festen Wert 'true' besitzen."@de ;
+            ] ;
+        ]
+    ) ;
+    sh:message "Ein Werkzeug muss entweder eine Haltbarkeit (>= 1) besitzen oder explizit unzerstörbar (true) sein."@de .
 
 # ==============================================================================
-# 3. GESCHLOSSENE SHAPE FÜR BLÖCKE (mc:Block)
-# Verhindert Fremdeigenschaften und erzwingt erlaubte Abbau-Werkzeuge
+# 3. BLÖCKE (mc:Block) - Räumliche Welt & Abbau-Bedingungen
 # ==============================================================================
 mc:BlockShape a sh:NodeShape ;
     rdfs:label "Block-Schablone"@de ;
-    rdfs:comment "Geschlossene Prüfung für Weltblöcke, Nachbarschaften und Abbau-Bedingungen."@de ;
+    rdfs:comment "Geschlossene Prüfung für Weltblöcke, Nachbarschaften und Abbauwerkzeuge."@de ;
     sh:targetClass mc:Block ;
     sh:closed true ;
     sh:ignoredProperties ( 
         rdf:type 
         rdfs:subClassOf 
         owl:sameAs 
+        mc:hasName              
+        mc:hasRecipe            
         mc:requiresMaterial 
         mc:harvestedWith 
         mc:requiresInteractionTool 
     ) ;
     sh:property [
-        sh:path mc:hasName ;
-        sh:name "Blockname-Zulassung"@de ;
-        sh:description "Erlaubt das Führen von Namen am Block (Validierung erfolgt über mc:ItemShape)."@de ;
-    ] ;
-    sh:property [
         sh:path mc:minedWith ;
         sh:name "Zulässiges Abbau-Werkzeug"@de ;
         sh:description "Blöcke dürfen ausschließlich mit den vier Standard-Spitzhacken abgebaut werden."@de ;
         sh:in ( mc:WoodenPickaxe mc:StonePickaxe mc:IronPickaxe mc:DiamondPickaxe ) ;
-        sh:message "Unzulässiges Abbau-Werkzeug: Der Block darf nur mit einer Holz-, Stein-, Eisen- oder Diamantspitzhacke abgebaut werden."@de ;
-    ] ;
-    sh:property [
-        sh:path mc:hasRecipe ;
-        sh:name "Block-Herstellungsrezept"@de ;
-        sh:description "Rezept zur Herstellung oder Weiterverarbeitung dieses Blocks."@de ;
-        sh:class mc:Recipe ;
-        sh:message "Das referenzierte Block-Rezept muss eine gültige Instanz von mc:Recipe sein."@de ;
+        sh:message "Unzulässiges Abbau-Werkzeug: Nur Holz-, Stein-, Eisen- oder Diamantspitzhacke erlaubt."@de ;
     ] ;
     sh:property [
         sh:path mc:isAdjacentTo ;
         sh:name "Räumliche Nachbarschaft"@de ;
         sh:description "Angrenzende Elemente in der Spielwelt müssen zwingend ebenfalls Blöcke sein."@de ;
         sh:class mc:Block ;
-        sh:message "Nachbarobjekte über mc:isAdjacentTo müssen zwingend Instanzen der Klasse mc:Block sein."@de ;
+        sh:message "Nachbarobjekte über mc:isAdjacentTo müssen zwingend Instanzen von mc:Block sein."@de ;
     ] .
 
 # ==============================================================================
@@ -122,18 +115,18 @@ mc:BlockShape a sh:NodeShape ;
 # ==============================================================================
 mc:CraftingStationShape a sh:NodeShape ;
     rdfs:label "Herstellungsstations-Schablone"@de ;
-    rdfs:comment "Stellt sicher, dass jede Arbeitsstation physisch in der Welt als Block existiert."@de ;
+    rdfs:comment "Stellt sicher, dass jede Arbeitsstation eine persistente IRI ist und als Block existiert."@de ;
     sh:targetClass mc:CraftingStation ;
     sh:nodeKind sh:IRI ;
     sh:class mc:Block ;
-    sh:message "Jede Herstellungsstation muss als benannte Web-Ressource (IRI) vorliegen und zugleich als mc:Block typisiert sein."@de .
+    sh:message "Jede Herstellungsstation muss als IRI vorliegen und zugleich als mc:Block typisiert sein."@de .
 
 # ==============================================================================
-# 5. GESCHLOSSENE SHAPE FÜR REZEPTE (mc:Recipe)
+# 5. REZEPTE (mc:Recipe)
 # ==============================================================================
 mc:RecipeShape a sh:NodeShape ;
     rdfs:label "Rezept-Schablone"@de ;
-    rdfs:comment "Prüfung von Herstellungsstation, Ausbeute und Konsistenz der Zutatenliste."@de ;
+    rdfs:comment "Prüfung von Herstellungsstation, Ausbeute und Konsistenz der Zutaten."@de ;
     sh:targetClass mc:Recipe ;
     sh:closed true ;
     sh:ignoredProperties ( 
@@ -143,7 +136,7 @@ mc:RecipeShape a sh:NodeShape ;
     sh:property [
         sh:path mc:craftedAt ;
         sh:name "Herstellungsstation"@de ;
-        sh:description "Optionale Arbeitsstation (0..n). Falls angegeben, muss es eine gültige Herstellungsstation sein."@de ;
+        sh:description "Optionale Station (0..n). Falls angegeben, muss es eine gültige Herstellungsstation sein."@de ;
         sh:class mc:CraftingStation ;
         sh:nodeKind sh:IRI ;
         sh:message "Die angegebene Herstellungsstation muss eine benannte Instanz von mc:CraftingStation sein."@de ;
@@ -165,17 +158,10 @@ mc:RecipeShape a sh:NodeShape ;
         sh:minCount 1 ;
         sh:node mc:IngredientRequirementShape ;
         sh:message "Ein Rezept muss mindestens eine gültige Zutat nach mc:IngredientRequirementShape einbinden."@de ;
-    ] ;
-    sh:property [
-        sh:path ( mc:requiresIngredient mc:requiredItem ) ;
-        sh:name "Zutaten-Erreichbarkeit"@de ;
-        sh:description "Sequenzpfad: Alle referenzierten Zutaten müssen gültige Gegenstände (mc:Item) sein."@de ;
-        sh:class mc:Item ;
-        sh:message "Tiefenprüfung fehlgeschlagen: Die referenzierte Zutat muss eine deklarierte Instanz von mc:Item sein."@de ;
     ] .
 
 # ==============================================================================
-# 6. GESCHLOSSENE SHAPE FÜR ZUTATENANFORDERUNGEN (mc:IngredientRequirement)
+# 6. ZUTATENANFORDERUNGEN (mc:IngredientRequirement)
 # ==============================================================================
 mc:IngredientRequirementShape a sh:NodeShape ;
     rdfs:label "Zutatenanforderungs-Schablone"@de ;
