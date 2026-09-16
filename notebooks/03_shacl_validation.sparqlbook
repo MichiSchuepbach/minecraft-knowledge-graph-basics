@@ -118,59 +118,5 @@
     "language": "markdown",
     "value": "# Kapitel 3: Das Zwei-Graphen-Modell und Validierungsworkflow\n\n---\n\n### 1. Das Zwei-Graphen-Modell (Idempotenz)\nEine SHACL-Validierung trennt die eigentlichen Fachdaten strikt von den definierten Prüfregeln:\n\n* **Data Graph (DG):** Der RDF-Graph, der die tatsächlichen Fakten und Instanzen unseres Minecraft-Wissensgraphen enthält (z. B. `mc:Stick`, `mc:Cobblestone`).\n* **Shapes Graph (SG):** Der RDF-Graph, der ausschließlich die Validierungsregeln enthält (unsere Datei `minecraft_shapes.ttl`).\n\n\n---\n\n### 2. Regeln als Übersicht: Diagramme mit SHACL Play!\nSHACL prüft nicht nur Fehler, sondern zeigt uns auch auf einen Blick, wie unsere Daten aufgebaut sind.\n\nDas Web-Tool SHACL Play! liest unsere Shapes-Datei ein und zeichnet daraus automatisch ein übersichtliches Diagramm: UML-Klassendiagramm.\n\n* Jede Shape wird zu einem Kasten für eine Klasse, zum Beispiel für Blöcke oder Rezepte.gerendert.\n* Eigenschaften wie Name oder Ausbeute stehen als Text- und Zahlenangaben direkt im Kasten\n* Verknüpfungen zu anderen Objekten werden als Pfeile zwischen den Kästen gezeichnet.\n\n\n",
     "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 1,
-    "language": "markdown",
-    "value": "![alt text](../images/shacl/image.png)\n![alt text](../images/shacl/image-1.png)\n![alt text](../images/shacl/image-2.png)\n![alt text](../images/shacl/image-3.png)\n![alt text](../images/shacl/image-4.png)\n![alt text](../images/shacl/image-5.png)\n![alt text](../images/shacl/image-6.png)\n![alt text](../images/shacl/image-7.png)",
-    "metadata": {}
   }
 ]

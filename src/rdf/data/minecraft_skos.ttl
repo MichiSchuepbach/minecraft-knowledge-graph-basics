@@ -1,0 +1,160 @@
+@prefix rdf:    <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:   <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:    <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos:   <http://www.w3.org/2004/02/skos/core#> .
+@prefix mcskos: <http://www.minecraft.example/url/2002/kos/> .
+
+# 1. BEGRIFFSSYSTEM & TOP-KONZEPT
+
+mcskos:MinecraftItemTaxonomy a skos:ConceptScheme ;
+    skos:prefLabel "Minecraft Gegenstandskatalog"@de, "Minecraft Item Taxonomy"@en ;
+    skos:definition "Kontrolliertes Begriffs- und Kategoriesystem für Minecraft-Items zur Suche und Navigation."@de ;
+    skos:hasTopConcept mcskos:Item .
+
+mcskos:Item a skos:Concept ;
+    skos:topConceptOf mcskos:MinecraftItemTaxonomy ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:prefLabel "Gegenstand"@de, "Item"@en ;
+    skos:definition "Die oberste Kategorie fuer alle auffindbaren und herstellbaren Objekte in Minecraft."@de .
+
+# 2. HAUPTAST: WERKZEUGE & ABBAU
+
+mcskos:Tool a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Item ;
+    skos:prefLabel "Werkzeug"@de, "Tool"@en ;
+    skos:altLabel "Ausrüstung"@de, "Utensilien"@de, "Gear"@en ;
+    skos:hiddenLabel "Werkzeueg"@de, "Werkeug"@de ;
+    skos:definition "Eine Kategorie von Items zur Umweltinteraktion und zum Abbau von Blöcken."@de .
+
+mcskos:Pickaxe a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Tool ;
+    skos:prefLabel "Spitzhacke"@de, "Pickaxe"@en ;
+    skos:altLabel "Picke"@de, "Pickel"@de ;
+    skos:hiddenLabel "Spizhake"@de, "Picaxe"@en ;
+    skos:notation "mc:diamond_pickaxe"^^xsd:string ;
+    skos:related mcskos:Cobblestone ;
+    skos:definition "Ein Werkzeug, das den Abbau von steinbasierten Ressourcen ermoeglicht und beschleunigt."@de .
+
+# 3. UNTERAST: WAFFEN & KAMPFAUSRÜSTUNG
+
+mcskos:Weapon a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Tool ;
+    skos:prefLabel "Waffe"@de, "Weapon"@en ;
+    skos:altLabel "Kampfwerkzeug"@de, "FightingTool"@en ;
+    skos:hiddenLabel "Wafe"@de, "Waepon"@en ;
+    skos:scopeNote "Umfasst ausschliesslich Gegenstaende, deren primaerer Verwendungszweck der Kampf ist."@de ;
+    skos:example "Ein Schwert oder Bogen dient dem Angriff; eine Holzspitzhacke gilt trotz Schadenswerten primaer als Werkzeug."@de ;
+    skos:definition "Eine Waffe ist ein Werkzeug, das fuer den Kampf gegen Mobs oder Spieler eingesetzt wird und Schaden verursacht."@de .
+
+mcskos:Sword a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Weapon ;
+    skos:prefLabel "Schwert"@de, "Sword"@en ;
+    skos:altLabel "Saebel"@de, "Dagger"@en ;
+    skos:hiddenLabel "Shwert"@de, "Shwort"@en ;
+    skos:notation "mc:diamond_sword"^^xsd:string ;
+    skos:related mcskos:Mace ;
+    skos:definition "Eine Nahkampfwaffe, die mit einem Stock und Klingenmaterial hergestellt wird und schnelle Schlaege ermoeglicht."@de .
+
+mcskos:Bow a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Weapon ;
+    skos:prefLabel "Bogen"@de, "Bow"@en ;
+    skos:altLabel "Flitzebogen"@de, "Langbogen"@de ;
+    skos:hiddenLabel "Boogen"@de, "Bouw"@en ;
+    skos:definition "Eine aufladbare Fernkampfwaffe, die Pfeile verbraucht, um Zielen auf Distanz Schaden zuzufuegen."@de .
+
+mcskos:Spear a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Weapon ;
+    skos:prefLabel "Speer"@de, "Spear"@en ;
+    skos:altLabel "Lanze"@de, "Picke"@en ;
+    skos:hiddenLabel "Sper"@de, "Spaer"@en ;
+    skos:definition "Eine Nahkampfwaffe mit grosser Reichweite, die mehr Schaden verursacht, je schneller sich der Spieler bewegt."@de .
+
+mcskos:Mace a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Weapon ;
+    skos:prefLabel "Streitkolben"@de, "Mace"@en ;
+    skos:altLabel "Keule"@de, "Kriegshammer"@de, "Heavy Mace"@en ;
+    skos:hiddenLabel "Streitkolbne"@de, "Maice"@en ;
+    skos:related mcskos:Sword ;
+    skos:definition "Eine schwere Nahkampfwaffe, deren Schaden dynamisch mit der Fallhoehe vor dem Schlag skaliert."@de .
+
+# 4. HAUPTAST: BLÖCKE
+
+mcskos:Block a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Item ;
+    skos:prefLabel "Block"@de, "Block"@en ;
+    skos:altLabel "Quadrat"@de, "Brick"@en ;
+    skos:hiddenLabel "Blok"@de, "Bloc"@en ;
+    skos:definition "Eine quadratische Einheit, aus der die Spielwelt generiert ist und die unterschiedliche Interaktionen ermoeglicht."@de .
+
+mcskos:Cobblestone a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Block ;
+    skos:prefLabel "Bruchstein"@de, "Cobblestone"@en ;
+    skos:altLabel "Stein"@de, "Cobbel"@en ;
+    skos:hiddenLabel "St4in"@de, "Cobel"@en ;
+    skos:related mcskos:Pickaxe ;
+    skos:definition "Ein Block, den man erhaelt, indem man Stein mit einer Spitzhacke abbaut. Dient zur Herstellung von Steinwerkzeugen oder Oefen."@de .
+
+# 5. HAUPTAST: NAHRUNGSMITTEL
+
+mcskos:Food a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Item ;
+    skos:prefLabel "Nahrung"@de, "Food"@en ;
+    skos:altLabel "Essen"@de, "Lebensmittel"@de, "Proviant"@de ;
+    skos:hiddenLabel "Fud"@en, "Lebensmitel"@de ;
+    skos:definition "Konsumierbare Gegenstaende zur Wiederherstellung von Hunger- und Lebenspunkten."@de .
+
+mcskos:Bread a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Food ;
+    skos:prefLabel "Brot"@de, "Bread"@en ;
+    skos:altLabel "Laib"@de ;
+    skos:hiddenLabel "Broht"@de ;
+    skos:definition "Aus Weizen hergestelltes Grundnahrungsmittel."@de .
+
+mcskos:Carrot a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Food ;
+    skos:prefLabel "Karotte"@de, "Carrot"@en ;
+    skos:altLabel "Rübli"@de ;
+    skos:hiddenLabel "Karote"@de, "Carot"@en ;
+    skos:definition "Ein angebautes Lebensmittel das roh gegeessen wird und über Felder vermehrt werden kann. "@de .
+
+mcskos:Apple a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Food ;
+    skos:prefLabel "Apfel"@de, "Apple"@en ;
+    skos:altLabel "Obst"@de ;
+    skos:hiddenLabel "Apfl"@de, "Appel"@en ;
+    skos:notation "ITEM-FOOD-001"^^xsd:string ;
+    skos:related mcskos:Goldenapple ;
+    skos:exactMatch <https://minecraft.wiki/w/Apple> ;
+    skos:closeMatch <http://dbpedia.org/resource/Apple> ;
+    skos:definition "Eine natuerliche Frucht, die gelegentlich aus Eichenlaub faellt."@de .
+
+mcskos:Goldenapple a skos:Concept ;
+    skos:inScheme mcskos:MinecraftItemTaxonomy ;
+    skos:broader mcskos:Food ;
+    skos:prefLabel "Goldapfel"@de, "Goldenapple"@en ;
+    skos:altLabel "Heilung"@de, "Healing"@en, "Gap"@en ;
+    skos:hiddenLabel "Goldenerapfel"@de, "Goldapple"@en ;
+    skos:related mcskos:Apple ;
+    skos:definition "Wird aus einem Apfel und Gold hergestellt und gibt dem Spieler beim Konsum Regeneration und Bonusherzen."@de .
+
+# 6. SAMMLUNGEN (Collections fuer Inventar-Kits & UI)
+
+mcskos:PvPStarterKit a skos:Collection ;
+    skos:prefLabel "PvP-Kampfausrüstung"@de, "PvP Combat Kit"@en ;
+    skos:definition "Zusammenstellung empfohlener Ausruestung fuer Duell-Situationen."@de ;
+    skos:member mcskos:Sword ,
+                mcskos:Bow ,
+                mcskos:Goldenapple .
