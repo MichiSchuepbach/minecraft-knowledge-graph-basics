@@ -47,6 +47,9 @@ mc:ToolShape a sh:NodeShape ;
         mc:requiresMaterial 
         mc:harvestedWith 
         mc:requiresInteractionTool 
+        mc:canMine
+        mc:durability
+        mc:isUnbreakable
     ) ;
     sh:property [
         sh:path mc:hasName ;
