@@ -1,8 +1,8 @@
 # Minecraft Knowledge Graph – Semantic Web Project
 
-[![CI](https://github.com/blw-ofag-ufag/semantic-web-template/actions/workflows/ci.yml/badge.svg)](https://github.com/blw-ofag-ufag/semantic-web-template/actions/workflows/ci.yml)
-[![GitHub last commit](https://img.shields.io/github/last-commit/blw-ofag-ufag/semantic-web-template.svg)](https://github.com/blw-ofag-ufag/semantic-web-template/commits)
-[![GitHub issues](https://img.shields.io/github/issues/blw-ofag-ufag/semantic-web-template.svg)](https://github.com/blw-ofag-ufag/semantic-web-template/issues)
+[![CI](https://github.com/MichiSchuepbach/minecraft-knowledge-graph-basics/actions/workflows/ci.yml/badge.svg)](https://github.com/MichiSchuepbach/minecraft-knowledge-graph-basics/actions/workflows/ci.yml)
+[![GitHub last commit](https://img.shields.io/github/last-commit/MichiSchuepbach/minecraft-knowledge-graph-basics.svg)](https://github.com/MichiSchuepbach/minecraft-knowledge-graph-basics/commits)
+[![GitHub issues](https://img.shields.io/github/issues/MichiSchuepbach/minecraft-knowledge-graph-basics.svg)](https://github.com/MichiSchuepbach/minecraft-knowledge-graph-basics/issues)
 
 For demonstrative purposes, this template repository includes a full semantic web pipeline, including
  
